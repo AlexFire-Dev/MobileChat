@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Google Auth</title>
+
+    <meta name="google-signin-client_id" content="{{ google_client_id }}">
+</head>
+
+<body>
+    <div id="google-signin"></div>
+
+    <script>
+        function onSuccess(googleUser) {
+            let profile = googleUser.getBasicProfile();
+            let token = googleUser.getAuthResponse().id_token;
+
+            fetch('{{ http_protocol }}://{{ address }}/api/v1/auth/google-callback/', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json; charset=UTF-8'},
+                body: JSON.stringify({
+                    email: profile.getEmail(),
+                    token: token
+                })
+            })
+            .then(res => res.json())
+            .then(data => console.log('ID: ' + data.user_id + '\nToken: ' + data.access_token))
+        }
+
+        function onFailure(error) {
+            console.log(error);
+        }
+
+        function renderButton() {
+            gapi.signin2.render('google-signin', {
+                'scope': 'profile email',
+                'width': 240,
+                'height': 50,
+                'longtitle': true,
+                'theme': 'dark',
+                'onsuccess': onSuccess,
+                'onfailure': onFailure
+            });
+        }
+    </script>
+
+    <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+</body>
+</html>
