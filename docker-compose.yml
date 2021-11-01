@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    volumes:
+      - ./static/:/static/
+      - ./media/:/media/
+    env_file:
+      - ./conf.env
+    ports:
+      - "80:8000"
+    networks:
+      - defaulf
+    restart: unless-stopped
+
+networks:
+  defaulf:
+    driver: bridge

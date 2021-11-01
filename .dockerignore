@@ -1,0 +1,11 @@
+# Ignore everything
+**
+
+# Allowed
+!apps/
+!templates/
+!MobileChat/
+
+!manage.py
+!requirements.txt
+!start.sh
